@@ -3,13 +3,16 @@ package org.yearup.data.mysql;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.yearup.models.Product;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 class MySqlProductDaoTest extends BaseDaoTestClass
 {
     private MySqlProductDao dao;
@@ -44,5 +47,20 @@ class MySqlProductDaoTest extends BaseDaoTestClass
         // assert
         assertEquals(expected.getPrice(), actual.getPrice(), "Because I tried to get product 1 from the database.");
     }
+
+    @Test
+    public void searchProductsByMinMaxPrice_shouldReturnCorrectNumberOfProducts()
+    {
+        // Arrange
+        BigDecimal minPrice = BigDecimal.valueOf(700);
+        BigDecimal maxPrice = BigDecimal.valueOf(1500);
+
+        // Act
+        List<Product> products = dao.search(-1, minPrice, maxPrice, "");
+
+        // Assert
+        assertEquals(2, products.size());
+    }
+
 
 }
